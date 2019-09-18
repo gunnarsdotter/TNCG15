@@ -8,6 +8,6 @@ public:
 
 	bool eye;
 	// Pixel 2D array 800x800 
-	Vertex v1,v2,
+	//Vertex v1, v2, v3;
 };
 

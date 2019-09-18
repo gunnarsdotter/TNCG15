@@ -2,14 +2,15 @@
 #include "Vertex.h"
 #include "Triangle.h"
 #include "ColorDbl.h"
+
 class Ray
 {
 public:
 	Ray();
 	virtual ~Ray();
 
-	Vertex start, end;
+	//Vertex start, end;
 	ColorDbl color;
-	Triangle &t;
+	//Triangle &t;
 };
 

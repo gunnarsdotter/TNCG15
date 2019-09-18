@@ -7,6 +7,6 @@ public:
 	Pixel();
 	virtual ~Pixel();
 	ColorDbl color;
-	Ray &ray;
+	//Ray &ray;
 };
 
