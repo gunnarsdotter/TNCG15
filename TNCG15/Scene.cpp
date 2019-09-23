@@ -16,6 +16,63 @@ Scene::~Scene()
 
 void Scene::createRoom()
 {
+	//vertices
+	glm::vec4 a = glm::vec4(0.0, 6.0, 5.0, 1);
+	glm::vec4 b = glm::vec4(10.0, 6.0, 5.0, 1);
+	glm::vec4 c = glm::vec4(-3.0, 0.0, 5.0, 1);
+	glm::vec4 d = glm::vec4(13.0, 0.0, 5.0, 1);
+	glm::vec4 e = glm::vec4(0.0, -6.0, 5.0, 1);
+	glm::vec4 f = glm::vec4(10.0, -6.0, 5.0, 1);
+	glm::vec4 g = glm::vec4(0.0, 6.0, -5.0, 1);
+	glm::vec4 h = glm::vec4(10.0, 6.0, -5.0, 1);
+	glm::vec4 i = glm::vec4(-3.0, 0.0, -5.0, 1);
+	glm::vec4 j = glm::vec4(13.0, 0.0, -5.0, 1);
+	glm::vec4 k = glm::vec4(0.0, -6.0, -5.0, 1);
+	glm::vec4 l = glm::vec4(10.0, -6.0, -5.0, 1);
+	glm::vec4 m= glm::vec4(0.0, 8.0, 5.0, 1);
+	glm::vec4 n = glm::vec4(0.0, 8.0, -5.0, 1);
+
+	//color
+	ColorDbl white = ColorDbl(1.0, 1.0, 1.0);
+	//Add all triangles to the scen
+	//Roof
+	triangles->push_back(new Triangle(a,b,m,white));
+	triangles->push_back(new Triangle(b,d,m,white));
+	triangles->push_back(new Triangle(d,f,m,white));
+	triangles->push_back(new Triangle(f,e,m,white));
+	triangles->push_back(new Triangle(e,c,m,white));
+	triangles->push_back(new Triangle(c,a,m,white));
+
+	//Floor
+	triangles->push_back(new Triangle(g,h,n,white));
+	triangles->push_back(new Triangle(h,j,n,white));
+	triangles->push_back(new Triangle(j,l, n, white));
+	triangles->push_back(new Triangle(l,k, n, white));
+	triangles->push_back(new Triangle(k,i, n, white));
+	triangles->push_back(new Triangle(i,g, n, white));
+
+	//Walls
+	triangles->push_back(new Triangle(a,g,b,white));
+	triangles->push_back(new Triangle(b,h,g,white));
+
+	triangles->push_back(new Triangle(b,h,d,white));
+	triangles->push_back(new Triangle(d,j,h,white));
+	
+	triangles->push_back(new Triangle(d,j,f,white));
+	triangles->push_back(new Triangle(f,l,j,white));
+	
+	triangles->push_back(new Triangle(f,l,e,white));
+	triangles->push_back(new Triangle(e,k,l,white));
+	
+	triangles->push_back(new Triangle(e,k,c,white));
+	triangles->push_back(new Triangle(c,i,k,white));
+	
+	triangles->push_back(new Triangle(c,i,a,white));
+	triangles->push_back(new Triangle(a,g,i,white));
+
+
+
+	/*
 	//Create the room Vertices
 	Vertex* a = new Vertex(0.0,  6.0,  5.0, 1);
 	Vertex* b = new Vertex(10.0, 6.0,  5.0, 1);
@@ -31,7 +88,7 @@ void Scene::createRoom()
 	Vertex* l = new Vertex(10.0,-6.0, -5.0, 1);
 	Vertex* m = new Vertex(0.0,  8.0,  5.0, 1);
 	Vertex* n = new Vertex(0.0,  8.0, -5.0, 1);
-
+	
 	//Create 24 diffrence triangle
 	//Roof
 	Triangle* triangle1  = new Triangle(a, b, m);
@@ -65,7 +122,7 @@ void Scene::createRoom()
 
 	Triangle* triangle23 = new Triangle(c, i, a);
 	Triangle* triangle24 = new Triangle(a, g, i);
-
+	
 	//Add all triangles to the scen
 	triangles->push_back(triangle1);
 	triangles->push_back(triangle2);
@@ -91,4 +148,7 @@ void Scene::createRoom()
 	triangles->push_back(triangle22);
 	triangles->push_back(triangle23);
 	triangles->push_back(triangle24);
+	*/
+
+
 }

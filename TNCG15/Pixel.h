@@ -5,7 +5,7 @@ class Pixel
 {
 public:
 	Pixel();
-	virtual ~Pixel();
+	virtual ~Pixel() = default;
 	ColorDbl color;
 	//Ray &ray;
 };

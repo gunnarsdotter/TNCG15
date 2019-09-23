@@ -2,8 +2,9 @@
 class ColorDbl
 {
 public:
-	ColorDbl();
-	virtual ~ColorDbl();
-	double r, g, b;
+	ColorDbl(float r, float g, float b) :r{ r }, g{ g }, b{ b } {};
+	virtual ~ColorDbl() = default;
+private:
+	float r, g, b;
 };
 
