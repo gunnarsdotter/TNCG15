@@ -17,6 +17,16 @@ public:
 	//TODO-  rayIntersection(Ray arg)
 	//that computes the intersectionbetween aRayand 
 	//theTrianglewith the Möller-Trumbore algorithm
+	glm::vec3 rayIntersection(Ray arg){
+		glm::vec4 T = arg.start - v1;
+		glm::vec4 E1 = v2 - v1;
+		glm::vec4 E2 = v3 - v1;
+		glm::vec4 D = arg.end - arg.start;
+		//glm::vec3 P = glm::cross(D, E2);
+		//glm::vec3 Q = glm::cross(T, E1);
+
+		return v1;
+	}
 
 	glm::vec3 getNormal() { return normal; };
 	ColorDbl getColor() {return color;};
