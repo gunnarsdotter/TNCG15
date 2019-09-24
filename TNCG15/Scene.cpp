@@ -33,7 +33,15 @@ void Scene::createRoom()
 	glm::vec4 n = glm::vec4(0.0, 8.0, -5.0, 1);
 
 	//color
-	ColorDbl white = ColorDbl(1.0, 1.0, 1.0);
+	ColorDbl white   = ColorDbl(1.0, 1.0, 1.0);
+	ColorDbl red     = ColorDbl(1.0, 0.0, 0.0);
+	ColorDbl green   = ColorDbl(0.0, 1.0, 0.0);
+	ColorDbl blue    = ColorDbl(0.0, 0.0, 1.0);
+	ColorDbl magenta = ColorDbl(1.0, 0.0, 1.0);
+	ColorDbl yellow	 = ColorDbl(1.0, 1.0, 0.0);
+	ColorDbl cyan    = ColorDbl(0.0, 1.0, 1.0);
+
+
 	//Add all triangles to the scen
 	//Roof
 	triangles->push_back(new Triangle(a,b,m,white));
@@ -52,23 +60,23 @@ void Scene::createRoom()
 	triangles->push_back(new Triangle(i,g, n, white));
 
 	//Walls
-	triangles->push_back(new Triangle(a,g,b,white));
-	triangles->push_back(new Triangle(b,h,g,white));
+	triangles->push_back(new Triangle(a,g,b,red));
+	triangles->push_back(new Triangle(b,h,g,red));
 
-	triangles->push_back(new Triangle(b,h,d,white));
-	triangles->push_back(new Triangle(d,j,h,white));
+	triangles->push_back(new Triangle(b,h,d,green));
+	triangles->push_back(new Triangle(d,j,h,green));
 	
-	triangles->push_back(new Triangle(d,j,f,white));
-	triangles->push_back(new Triangle(f,l,j,white));
+	triangles->push_back(new Triangle(d,j,f,blue));
+	triangles->push_back(new Triangle(f,l,j,blue));
 	
-	triangles->push_back(new Triangle(f,l,e,white));
-	triangles->push_back(new Triangle(e,k,l,white));
+	triangles->push_back(new Triangle(f,l,e,magenta));
+	triangles->push_back(new Triangle(e,k,l,magenta));
 	
-	triangles->push_back(new Triangle(e,k,c,white));
-	triangles->push_back(new Triangle(c,i,k,white));
+	triangles->push_back(new Triangle(e,k,c,yellow));
+	triangles->push_back(new Triangle(c,i,k,yellow));
 	
-	triangles->push_back(new Triangle(c,i,a,white));
-	triangles->push_back(new Triangle(a,g,i,white));
+	triangles->push_back(new Triangle(c,i,a,cyan));
+	triangles->push_back(new Triangle(a,g,i,cyan));
 
 
 
