@@ -14,9 +14,12 @@ public:
 	glm::vec3 calculateNormal(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
 		return glm::normalize(glm::cross(v2 - v1, v3 - v1));
 	};
+	//TODO-  rayIntersection(Ray arg)
+	//that computes the intersectionbetween aRayand 
+	//theTrianglewith the Möller-Trumbore algorithm
+
 	glm::vec3 getNormal() { return normal; };
 	ColorDbl getColor() {return color;};
-
 	virtual ~Triangle() = default;
 
 private:
