@@ -15,6 +15,7 @@ public:
 	//Vertex start, end;
 	glm::vec4 start, end;
 	ColorDbl color;
+	//TODO-Raycontains a reference to the triangle on which theend point is located.
 	//Triangle &t;
 };
 
