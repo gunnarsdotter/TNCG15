@@ -7,7 +7,7 @@ class Triangle
 {
 public:
 	Triangle() = delete;
-	Triangle::Triangle(glm::vec4 inV1, glm::vec4 inV2, glm::vec4 inV3, ColorDbl color) :
+	Triangle(glm::vec4 inV1, glm::vec4 inV2, glm::vec4 inV3, ColorDbl color) :
 		v1{inV1 }, v2{ inV2 }, v3{ inV3 }, normal(calculateNormal(v1, v2, v3)), color{color}
 	{};
 	
