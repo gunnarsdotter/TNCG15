@@ -4,9 +4,9 @@
 class Pixel
 {
 public:
-	Pixel();
+	Pixel(ColorDbl c, Ray r) :color{ c }, ray{ r } {};
 	virtual ~Pixel() = default;
 	ColorDbl color;
-	//Ray &ray;
+	Ray &ray;
 };
 
