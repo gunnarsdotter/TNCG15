@@ -1,7 +1,7 @@
 #pragma once
-#include "Ray.h"
 #include "ColorDbl.h"
 #include "glm.hpp"
+#include "Ray.h"
 
 class Triangle
 {

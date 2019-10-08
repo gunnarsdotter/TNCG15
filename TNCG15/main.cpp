@@ -1,8 +1,10 @@
 #include <GLFW/glfw3.h>
+#include "Scene.h"
 
 int main(void)
 {
 	GLFWwindow* window;
+	Scene* theScen = new Scene();
 
 	/* Initialize the library */
 	if (!glfwInit())

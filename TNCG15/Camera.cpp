@@ -2,11 +2,6 @@
 
 
 
-Camera::Camera()
-{
-}
-
-
 Camera::~Camera()
 {
 }

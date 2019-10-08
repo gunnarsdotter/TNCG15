@@ -1,23 +1,28 @@
 #pragma once
-#include "Vertex.h"
-#include "Triangle.h"
 #include "ColorDbl.h"
+class Triangle;
 
 class Ray
 {
 public:
-	virtual ~Ray() = default;
 	Ray(glm::vec4 start, glm::vec4 end, ColorDbl color):
-		start{ start }, end{ end }, color{ color } {};
-	glm::vec3 getDirection() {
+		start{ start }, end{ end }, color{ color } 
+	{
 		direction = start - end;
-		return start - end;
+		T = nullptr;
+	};
+	virtual ~Ray() = default;
+	glm::vec3 getDirection() const{
+		return direction;
 	}
-	//Vertex start, end;
+	void setTriangel(Triangle* in) {
+		T = in;
+		//point = inPoint;
+	}
+
 	glm::vec4 start, end;
 	ColorDbl color;
 	glm::vec3 direction;
-	//TODO-Raycontains a reference to the triangle on which theend point is located.
-	//Triangle &t;
+	Triangle *T;
 };
 

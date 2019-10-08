@@ -2,7 +2,8 @@
 
 
 bool Triangle::rayIntersection(Ray arg)
-{glm::vec3 T = arg.start - v1;
+{
+	glm::vec3 T = arg.start - v1;
 	glm::vec3 E1 = v2 - v1;
 	glm::vec3 E2 = v3 - v1;
 	glm::vec3 D = arg.getDirection();

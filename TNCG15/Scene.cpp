@@ -1,18 +1,15 @@
 #include "Scene.h"
 
-
-
 Scene::Scene()
 {
 	triangles = new std::vector<Triangle*>();
 	createRoom();
+	c = new Camera(glm::vec4(0, -1, -1, 1), glm::vec4(0, 1, -1, 1), glm::vec4(0, 1, 1, 1), glm::vec4(0, -1, 1, 1));
 }
-
 
 Scene::~Scene()
 {
 }
-
 
 void Scene::createRoom()
 {
