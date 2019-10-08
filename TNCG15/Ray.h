@@ -8,7 +8,7 @@ public:
 	Ray(glm::vec4 start, glm::vec4 end, ColorDbl color):
 		start{ start }, end{ end }, color{ color } 
 	{
-		direction = start - end;
+		direction = end- start;
 		T = nullptr;
 	};
 	virtual ~Ray() = default;
@@ -24,5 +24,6 @@ public:
 	ColorDbl color;
 	glm::vec3 direction;
 	Triangle *T;
+	//glm::vec3 point;
 };
 

@@ -1,10 +1,21 @@
 #include <GLFW/glfw3.h>
 #include "Scene.h"
+#include "Camera.h"
+#include <iostream>
+
+using namespace std;
 
 int main(void)
 {
 	GLFWwindow* window;
 	Scene* theScen = new Scene();
+	cout << "Scen created" << endl;
+
+	Camera* c = new Camera(glm::vec4(0, -1, -1, 1), glm::vec4(0, 1, -1, 1), glm::vec4(0, 1, 1, 1), glm::vec4(0, -1, 1, 1));
+	cout << "Camera created"<< endl;
+
+	c->render(theScen);
+	cout << "Camera renderd" << endl;
 
 	/* Initialize the library */
 	if (!glfwInit())
