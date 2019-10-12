@@ -7,44 +7,47 @@ using namespace std;
 
 int main(void)
 {
-	GLFWwindow* window;
-	Scene* theScen = new Scene();
+	//GLFWwindow* window;
+	Scene* thescen = new Scene();
 	cout << "Scen created" << endl;
 
 	Camera* c = new Camera(glm::vec4(0, -1, -1, 1), glm::vec4(0, 1, -1, 1), glm::vec4(0, 1, 1, 1), glm::vec4(0, -1, 1, 1));
 	cout << "Camera created"<< endl;
 
-	c->render(theScen);
+	c->render(thescen);
 	cout << "Camera renderd" << endl;
 
-	/* Initialize the library */
-	if (!glfwInit())
-		return -1;
+	c->toImg();
+	cout << "Img done" << endl;
 
-	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		return -1;
-	}
+	///* Initialize the library */
+	//if (!glfwInit())
+	//	return -1;
 
-	/* Make the window's context current */
-	glfwMakeContextCurrent(window);
+	///* Create a windowed mode window and its OpenGL context */
+	//window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	//if (!window)
+	//{
+	//	glfwTerminate();
+	//	return -1;
+	//}
 
-	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window))
-	{
-		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
+	///* Make the window's context current */
+	//glfwMakeContextCurrent(window);
 
-		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
+	///* Loop until the user closes the window */
+	//while (!glfwWindowShouldClose(window))
+	//{
+	//	/* Render here */
+	//	glClear(GL_COLOR_BUFFER_BIT);
 
-		/* Poll for and process events */
-		glfwPollEvents();
-	}
+	//	/* Swap front and back buffers */
+	//	glfwSwapBuffers(window);
 
-	glfwTerminate();
+	//	/* Poll for and process events */
+	//	glfwPollEvents();
+	//}
+
+	//glfwTerminate();
 	return 0;
 }

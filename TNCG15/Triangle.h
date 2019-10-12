@@ -1,4 +1,5 @@
 #pragma once
+#include "Triangle.h"
 #include "ColorDbl.h"
 #include "glm.hpp"
 #include "Ray.h"
@@ -13,14 +14,10 @@ public:
 	
 	glm::vec3 calculateNormal(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
 		return glm::normalize(glm::cross(v2 - v1, v3 - v1));
-		
 	};
 
 	//Computes the intersection point with Möller-Trumbore algorithm
 	bool rayIntersection(Ray* arg);
-	int test() {
-		return 12;
-	}
 
 	glm::vec3 getNormal() { return normal; };
 	ColorDbl getColor() {return color;};

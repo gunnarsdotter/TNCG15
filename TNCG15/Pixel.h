@@ -8,6 +8,12 @@ public:
 	Pixel() {};
 	Pixel(ColorDbl c, Ray* r) :color{ c }, ray{ r } {};
 	virtual ~Pixel() = default;
+	void addRay(Ray* inRay) {
+		ray = inRay;
+	//TABORT
+		color = ray->color;
+	}
+	ColorDbl getColor() { return color; }
 
 private: 
 	ColorDbl color;

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ColorDbl.h"
 class Triangle;
 
@@ -12,18 +13,14 @@ public:
 		T = nullptr;
 	};
 	virtual ~Ray() = default;
-	glm::vec3 getDirection() const{
-		return direction;
-	}
-	void setTriangel(Triangle* in) {
-		T = in;
-		//point = inPoint;
-	}
+	glm::vec3 getDirection() const;
+	void setTriangle(Triangle* in, glm::vec3 inPoint, ColorDbl c); 
+
 
 	glm::vec4 start, end;
 	ColorDbl color;
 	glm::vec3 direction;
 	Triangle *T;
-	//glm::vec3 point;
+	glm::vec3 intersectionpoint;
 };
 

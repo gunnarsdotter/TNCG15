@@ -1,6 +1,7 @@
 #pragma once
 #include "glm.hpp"
 #include <iostream>
+
 class ColorDbl
 {
 public:
@@ -11,9 +12,11 @@ public:
 		color = glm::vec3(r, g, b);
 	};
 	virtual ~ColorDbl() = default;
+	//BORT?
 	void display() {
 		std::cout << " (" << color.r << ", " << color.g << ", " << color.b << ")";
 	}
+
 	glm::vec3 color;
 };
 

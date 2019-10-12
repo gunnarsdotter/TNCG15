@@ -1,5 +1,4 @@
 #include "Triangle.h"
-#include <iostream>
 
 using namespace std; 
 bool Triangle::rayIntersection(Ray* arg)
@@ -14,9 +13,12 @@ bool Triangle::rayIntersection(Ray* arg)
 	float t = glm::dot(Q, E2) / glm::dot(P, E1);
 	float u = glm::dot(P, T) / glm::dot(P, E1);
 	float v = glm::dot(Q, D) / glm::dot(P, E1);
-	cout << "u: " << u << " v: " << v << " t: " << t << " c: ";
-	color.display();
-	cout << endl;
-	if (u >= 0 && v >= 0 && u + v <= 1 && t >= 1)return true;
+	
+
+	if (u >= 0 && v >= 0 && u + v <= 1 && t >1) {
+		//set intersection point in the ray.
+		arg->setTriangle(this, glm::vec3(t, u, v), color);
+		return true;
+	}
 	else return false;
 }
