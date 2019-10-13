@@ -30,6 +30,7 @@ void Scene::createRoom()
 
 	//color
 	ColorDbl white   = ColorDbl(1.0, 1.0, 1.0);
+	ColorDbl black   = ColorDbl(0, 0, 0);
 	ColorDbl red     = ColorDbl(1.0, 0.0, 0.0);
 	ColorDbl green   = ColorDbl(0.0, 1.0, 0.0);
 	ColorDbl blue    = ColorDbl(0.0, 0.0, 1.0);
@@ -48,12 +49,12 @@ void Scene::createRoom()
 	triangles.push_back(new Triangle(c,a,m,white));
 
 	//Floor
-	triangles.push_back(new Triangle(h, g, n, white));
-	triangles.push_back(new Triangle(j, h, n, white));
-	triangles.push_back(new Triangle(l, j, n, white));
-	triangles.push_back(new Triangle(k, l, n, white));
-	triangles.push_back(new Triangle(i, k, n, white));
-	triangles.push_back(new Triangle(g, i, n, white));
+	triangles.push_back(new Triangle(h, g, n, black));
+	triangles.push_back(new Triangle(j, h, n, black));
+	triangles.push_back(new Triangle(l, j, n, black));
+	triangles.push_back(new Triangle(k, l, n, black));
+	triangles.push_back(new Triangle(i, k, n, black));
+	triangles.push_back(new Triangle(g, i, n, black));
 
 	//Walls
 	triangles.push_back(new Triangle(a,g,b,red));

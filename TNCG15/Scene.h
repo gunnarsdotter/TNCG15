@@ -22,7 +22,7 @@ public:
 		for (auto it = triangles.begin(); it != triangles.end(); ++it) {
 			if ((*(*it)).rayIntersection(arg)) {
 				//it can only interact with one wall at the time.
-				//break;
+				break;
 			}
 		}
 	}

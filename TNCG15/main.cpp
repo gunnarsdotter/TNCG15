@@ -14,6 +14,8 @@ int main(void)
 	Camera* c = new Camera(glm::vec4(0, -1, -1, 1), glm::vec4(0, 1, -1, 1), glm::vec4(0, 1, 1, 1), glm::vec4(0, -1, 1, 1));
 	cout << "Camera created"<< endl;
 
+	c->switchEye();
+
 	c->render(thescen);
 	cout << "Camera renderd" << endl;
 
