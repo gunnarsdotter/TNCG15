@@ -14,7 +14,7 @@ class Camera
 private:
 	glm::vec4 v1, v2, v3, v4;
 	//eye position variable
-	glm::vec4 eye1 = glm::vec4(-2, 0, 0, 1);
+	glm::vec4 eye1 = glm::vec4(-2, 0, 0, 1); 
 	glm::vec4 eye2 = glm::vec4(-1, 0, 0, 1);
 	bool pos1;
 	//Camera variable

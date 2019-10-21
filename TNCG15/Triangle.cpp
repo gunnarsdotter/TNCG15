@@ -15,9 +15,11 @@ bool Triangle::rayIntersection(Ray* arg)
 	float v = glm::dot(Q, D) / glm::dot(P, E1);
 	
 
-	if (u >= 0 && v >= 0 && u + v <= 1 && t >1) {
+	if ((u >= 0 && v >= 0 && u + v <= 1 && t >1)
+		&& (arg->intersectionpoint.t == NULL || arg->intersectionpoint.t > t)) {
 		//set intersection point in the ray.
 		arg->setTriangle(this, glm::vec3(t, u, v), color);
+		
 		return true;
 	}
 	else return false;

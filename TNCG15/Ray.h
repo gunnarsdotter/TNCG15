@@ -11,6 +11,7 @@ public:
 	{
 		direction = end- start;
 		T = nullptr;
+		intersectionpoint = glm::vec3(NULL, NULL, NULL);
 	};
 	virtual ~Ray() = default;
 	glm::vec3 getDirection() const;
