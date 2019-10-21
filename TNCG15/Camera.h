@@ -12,7 +12,6 @@ const int SIZE = 800;
 class Camera
 {
 private:
-	double imax = 1;
 	glm::vec4 v1, v2, v3, v4;
 	//eye position variable
 	glm::vec4 eye1 = glm::vec4(-2, 0, 0, 1);
@@ -26,6 +25,7 @@ private:
 	Pixel* pixels[SIZE][SIZE];
 	void getEye();
 	void createPixels();
+	double findImax();
 
 	//findMax()
 

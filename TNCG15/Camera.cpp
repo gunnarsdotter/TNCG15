@@ -38,6 +38,8 @@ void Camera::render(Scene* s) {
 };
 
 void Camera::toImg() {
+	double imax = findImax();
+
 	FILE* image = fopen("file.ppm", "wb");
 	fprintf(image, "P3 %d %d 255\n", SIZE, SIZE);
 	if (image != NULL) {
@@ -45,15 +47,42 @@ void Camera::toImg() {
 			for (int i = 0; i < SIZE; i++) { //horizontell
 				//get the color
 				ColorDbl col = (*pixels[SIZE - i - 1][SIZE - 1 - j]).getColor();
-				//TODO - do the pixel to rgb 0-255 and print it
+				//the scene is well-lit everywhere 
 				fprintf(image, "%d %d %d ",
 					(int)(col.color.r * 255.99/imax),
 					(int)(col.color.g * 255.99/imax),
 					(int)(col.color.b * 255.99/imax)
-				);
+				); 
+				
+				/* To get more dynamic when we have bright spots in the scene
+				#include <math.h>
+					fprintf(image, "%d %d %d ",
+					(int)(sqrt(col.color.r) 255.99/imax),
+					(int)(sqrt(col.color.g) * 255.99/imax),
+					(int)(sqrt(col.color.b) * 255.99/imax)
+
+				*/
 			}
 		}
 		fclose(image);
 	}
-
+}
+double Camera::findImax() {
+	double imax = 0;
+	for (int j = 0; j < SIZE; j++) { //vertical
+		for (int i = 0; i < SIZE; i++) { //horizontell
+			//get the color
+			ColorDbl col = (*pixels[SIZE - i - 1][SIZE - 1 - j]).getColor();
+			if (col.color.r > imax) {
+				imax = col.color.r;
+			}
+			if (col.color.g > imax) {
+				imax = col.color.g;
+			}
+			if (col.color.b > imax) {
+				imax = col.color.b;
+			}
+		}
+	}
+	return imax;
 }
