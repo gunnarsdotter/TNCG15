@@ -1,7 +1,7 @@
 #include "Triangle.h"
 
 using namespace std; 
-bool Triangle::rayIntersection(Ray* arg)
+bool Triangle::rayIntersection(Ray* arg, glm::vec3* intPoint)
 {
 	glm::vec3 T = arg->start - v1;
 	glm::vec3 E1 = v2 - v1;
@@ -14,12 +14,11 @@ bool Triangle::rayIntersection(Ray* arg)
 	float u = glm::dot(P, T) / glm::dot(P, E1);
 	float v = glm::dot(Q, D) / glm::dot(P, E1);
 	
-
 	if ((u >= 0 && v >= 0 && u + v <= 1 && t >1)
-		&& (arg->intersectionpoint.t == NULL || arg->intersectionpoint.t > t)) {
-		//set intersection point in the ray.
-		arg->setTriangle(this, glm::vec3(t, u, v), color);
-		
+		&& (arg->intersectionpoint.t == NULL || arg->intersectionpoint.x > t)) {
+		intPoint->x = t;
+		intPoint->y = u;
+		intPoint->z = v;
 		return true;
 	}
 	else return false;

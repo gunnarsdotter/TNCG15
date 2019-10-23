@@ -28,11 +28,13 @@ void Camera::render(Scene* s) {
 			//create a ray glm::vec4(0, i*delta - 0.99875, j*delta - 0.99875, 1)
 			Ray *ray = new Ray(eye, glm::vec4(0, i*delta - 0.99875, j*delta - 0.99875, 1), ColorDbl(0, 0, 0));
 
+			
 			//finde intersection point
 			s->intersection(ray);
-
+			s->sphereIntersection(ray); 
 			//add ray to pixel;
 			pixels[i][j]->addRay(ray);
+			//cout << " new pixle " << endl;
 		}
 	}
 };

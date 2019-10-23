@@ -17,7 +17,7 @@ public:
 	};
 
 	//Computes the intersection point with Möller-Trumbore algorithm
-	bool rayIntersection(Ray* arg);
+	bool rayIntersection(Ray* arg, glm::vec3*intPoint);
 
 	glm::vec3 getNormal() { return normal; };
 	ColorDbl getColor() {return color;};

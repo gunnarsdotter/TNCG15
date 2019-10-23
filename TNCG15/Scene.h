@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Triangle.h"
+#include "Sphere.h"
 #include <iostream>
 
 
@@ -13,18 +14,34 @@ private:
 	void createRoom();
 
 	std::vector<Triangle*> triangles;
+	std::vector<Sphere> spheres;
+
 public:
 	Scene();
 	virtual ~Scene();
 
-	void createTetrahedron();
+	void CreateLightSource();
 
+
+	void createTetrahedron();
+	
+	void sphereIntersection(Ray* arg) {
+		glm::vec3 intPoint = glm::vec3(0, 0, 0);
+		for (auto it = spheres.begin(); it != spheres.end(); ++it) {
+			if ((*it).rayIntersection(arg, &intPoint)) {
+				//set intersection point in the ray.
+				arg->intersectionpoint = intPoint;
+				arg->color = (*it).color;
+			}
+		}
+	}
 		
 	void intersection(Ray* arg) {
+		glm::vec3 intPoint = glm::vec3(0, 0, 0);
 		for (auto it = triangles.begin(); it != triangles.end(); ++it) {
-			if ((*(*it)).rayIntersection(arg)) {
-				//it can only interact with one wall at the time.
-				//break;
+			if ((*(*it)).rayIntersection(arg, &intPoint)) {
+				//set intersection point in the ray.
+				arg->setTriangle(*it, intPoint, (*it)->getColor());
 			}
 		}
 	}
