@@ -1,4 +1,4 @@
-﻿#pragma once
+﻿#pragma warning (disable : 4996)
 #include "glm.hpp"
 #include "Pixel.h"
 #include "Ray.h"

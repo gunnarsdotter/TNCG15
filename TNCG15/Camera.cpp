@@ -34,6 +34,7 @@ void Camera::render(Scene* s) {
 			//add ray to pixel;
 			pixels[i][j]->addRay(ray);
 		}
+		std::cout << "j= " << j << std::endl;
 	}
 };
 
