@@ -31,7 +31,7 @@ void Camera::render(Scene* s) {
 			
 			//finde intersection point
 			s->intersection(ray);
-			s->sphereIntersection(ray); 
+			//s->sphereIntersection(ray); 
 			//add ray to pixel;
 			pixels[i][j]->addRay(ray);
 			//cout << " new pixle " << endl;

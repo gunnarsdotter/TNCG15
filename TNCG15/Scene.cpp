@@ -5,6 +5,7 @@ Scene::Scene()
 	//triangles = new std::vector<Triangle*>();
 	
 	createTetrahedron();
+	//createSphere();
 	createRoom();	
 	Sphere sphere1(1.0, glm::vec4( 8, 0, 0, 1), ColorDbl(1.0, 0.0, 0.0));
 	spheres.push_back(sphere1);
@@ -38,7 +39,7 @@ void Scene::createTetrahedron()
 
 	ColorDbl lightblue = ColorDbl(0.54, 0.82, 1.0);
 
-	triangles.push_back(new Triangle(a, b, d, lightblue));	
+	triangles.push_back(new Triangle(a, b, d, lightblue));
 	triangles.push_back(new Triangle(a, c, d, lightblue));
 	triangles.push_back(new Triangle(a, b, c, lightblue));
 	triangles.push_back(new Triangle(b, c, d, lightblue));
