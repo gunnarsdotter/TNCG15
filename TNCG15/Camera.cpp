@@ -25,16 +25,14 @@ void Camera::createPixels() {
 void Camera::render(Scene* s) {
 	for (int j = 0; j < SIZE; j++) { //vertical
 		for (int i = 0; i < SIZE; i++) { //horizontell
-			//create a ray glm::vec4(0, i*delta - 0.99875, j*delta - 0.99875, 1)
+			//create a ray
 			Ray *ray = new Ray(eye, glm::vec4(0, i*delta - 0.99875, j*delta - 0.99875, 1), ColorDbl(0, 0, 0));
 
-			
 			//finde intersection point
 			s->intersection(ray);
-			//s->sphereIntersection(ray); 
+
 			//add ray to pixel;
 			pixels[i][j]->addRay(ray);
-			//cout << " new pixle " << endl;
 		}
 	}
 };
@@ -69,6 +67,7 @@ void Camera::toImg() {
 		fclose(image);
 	}
 }
+
 double Camera::findImax() {
 	double imax = 0;
 	for (int j = 0; j < SIZE; j++) { //vertical

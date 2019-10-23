@@ -27,8 +27,6 @@ private:
 	void createPixels();
 	double findImax();
 
-	//findMax()
-
 public:
 	Camera(glm::vec4 upleftcorner, glm::vec4 uprightcorner, glm::vec4 downleftcorner, glm::vec4 downrightcorner)
 		:v1{ upleftcorner }, v2{ uprightcorner }, v3{ downleftcorner }, v4{ downrightcorner }

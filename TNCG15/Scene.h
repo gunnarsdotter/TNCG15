@@ -22,28 +22,9 @@ public:
 
 	void CreateLightSource();
 	void createTetrahedron();
-	//should be change to the one below
-	/*
-	void sphereIntersection(Ray* arg) {
-		glm::vec3 intPoint = glm::vec3(0, 0, 0);
-		
-	}
-		*/
+
 	void intersection(Ray* arg) {
 		glm::vec3 intPoint = glm::vec3(0, 0, 0);
-/*
-		for (auto it = spheres.begin(); it != spheres.end(); ++it) {
-			if ((*(*it)).rayIntersection(arg)) {
-				//it can only interact with one wall at the time.
-				//break;
-			}
-		}
-		for (auto it = tetrahedras.begin(); it != tetrahedras.end(); ++it) {
-			if ((*(*it)).rayIntersection(arg)) {
-				//it can only interact with one wall at the time.
-				//break;
-			}
-		}*/
 		for (auto it = triangles.begin(); it != triangles.end(); ++it) {
 			if ((*(*it)).rayIntersection(arg, &intPoint)) {
 				//set intersection point in the ray.
@@ -53,10 +34,12 @@ public:
 		for (auto it = spheres.begin(); it != spheres.end(); ++it) {
 			if ((*it).rayIntersection(arg, &intPoint)) {
 				//set intersection point in the ray.
-				arg->intersectionpoint = intPoint;
-				arg->color = (*it).color;
+				arg->setSphere(&(*it), intPoint, (*it).color);
 			}
 		}
+
+		
+
 	}
 
 };
