@@ -1,4 +1,4 @@
-﻿
+﻿#pragma warning (disable : 4996)
 #include "glm.hpp"
 #include "Pixel.h"
 #include "Ray.h"
@@ -46,6 +46,7 @@ public:
 	 
 	void switchEye();	
 	void render(Scene * s);
+	glm::vec3 castRay(Ray* arg, Scene* s);
 	void toImg();
 
 };

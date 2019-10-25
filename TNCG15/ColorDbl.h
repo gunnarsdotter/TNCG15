@@ -12,6 +12,7 @@ public:
 		color = glm::vec3(r, g, b);
 	};
 	virtual ~ColorDbl() = default;
+	glm::vec3 getColor() { return color; };
 	//BORT?
 	void display() {
 		std::cout << " (" << color.r << ", " << color.g << ", " << color.b << ")";

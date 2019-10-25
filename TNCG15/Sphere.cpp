@@ -1,9 +1,5 @@
 #include "Sphere.h"
 
-
-Sphere::Sphere(double r, glm::vec4 c, ColorDbl col) :
-	radius{ r }, center{c}, color{col}{}
-
 Sphere::~Sphere()
 {
 }
@@ -41,7 +37,7 @@ bool Sphere::rayIntersection(Ray* arg, glm::vec3* x) {
 	x->x = arg->start.x + glm::vec4(rayDirection * t0, 1.0f).x;
 	x->y = arg->start.y + glm::vec4(rayDirection * t0, 1.0f).y;
 	x->z = arg->start.z + glm::vec4(rayDirection * t0, 1.0f).z;
-
+	
 	return true;
 }
 

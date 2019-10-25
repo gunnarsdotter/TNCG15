@@ -6,21 +6,23 @@
 class Sphere
 {
 public:
-	Sphere(double r, glm::vec4 c, ColorDbl col);
+	Sphere(double r, glm::vec4 c, ColorDbl col, int t):
+		radius{ r }, center{ c }, color{ col }, surfaceType{ t }{};
 	virtual ~Sphere();
 
 	bool rayIntersection(Ray* arg, glm::vec3* x);
 	
 	ColorDbl getColor() { return color; };
+	int getSurfaceType() { return surfaceType; };
 
-	void Sphere::calculateNormal(glm::vec3* x)
+	glm::vec3 Sphere::calcNormal(glm::vec3 Phit)
 	{
-		//TODO
-		//return glm::normalize(x - glm::vec3(position));
+		return glm::normalize(Phit - glm::vec3(center));
 	};
 
 	double radius;
 	glm::vec4 center;
 	ColorDbl color;
+	int surfaceType;
 };
 
