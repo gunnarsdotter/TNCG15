@@ -1,13 +1,11 @@
 #include "Scene.h"
 
 Scene::Scene()
-{
-	//triangles = new std::vector<Triangle*>();
-	
+{	
 	createTetrahedron();
 	//createSphere();
 	createRoom();	
-	Sphere sphere1(1.0, glm::vec4( 8, 4, 0, 1), ColorDbl(1.0, 0.0, 0.0),2);
+	Sphere sphere1(1.0, glm::vec4( 10, 0, 0, 1), ColorDbl(1.0, 0.0, 0.0),2);
 	spheres.push_back(sphere1);
 }
 
@@ -32,7 +30,7 @@ void Scene::CreateLightSource() {
 void Scene::createTetrahedron()
 {
 	//vertices
-	glm::vec4 a = glm::vec4( 8.0, 0.0, 1.0, 1);
+	glm::vec4 a = glm::vec4( 8.0, 0.0, 0.0, 1);
 	glm::vec4 b = glm::vec4(10.0, 1.0, 0.0, 1);
 	glm::vec4 c = glm::vec4(10.0,-1.0, 0.0, 1);
 	glm::vec4 d = glm::vec4( 9.0, 0.0, 2.0, 1);
@@ -48,27 +46,17 @@ void Scene::createTetrahedron()
 void Scene::intersection(Ray* arg)
 {
 	glm::vec3 hitpoint = glm::vec3(0, 0, 0);
-	//float length = FLT_MAX;
-	//float t;
-	for (auto it = triangles.begin(); it != triangles.end(); ++it) {
-		if ((*(*it)).rayIntersection(arg, &hitpoint)) {
-			//set intersection point in the ray.
-			//t = glm::length(hitpoint - glm::vec3(arg->start));
-			//if (t < length) {
-				arg->setTriangle(*it, hitpoint, (*it)->getColor());
-				//length = t;
-			//}
-		}
-	}
 	for (auto it = spheres.begin(); it != spheres.end(); ++it) {
 		if ((*it).rayIntersection(arg, &hitpoint)) {
 			//set intersection point in the ray.
-		//	t = glm::length(hitpoint - glm::vec3(arg->start));
-			//if (t < length) {
-				arg->setSphere(&(*it), hitpoint, (*it).color);
-				//arg->T = nullptr;
-				//length = t;
-			//}
+			arg->setSphere(&(*it), hitpoint, (*it).color);
+		}
+	}
+	for (auto it = triangles.begin(); it != triangles.end(); ++it) {
+		if ((*(*it)).rayIntersection(arg, &hitpoint)) {
+			//set intersection point in the ray.
+			arg->setTriangle(*it, hitpoint, (*it)->getColor());
+				
 		}
 	}
 }

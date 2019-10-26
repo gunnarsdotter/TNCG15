@@ -13,7 +13,6 @@ void Camera::getEye() {
 	else { eye = eye2; }
 }
 
-
 void Camera::createPixels() {
 	//skapa pixel 
 	for (int j = 0; j < SIZE; j++) { //vertical
@@ -22,15 +21,16 @@ void Camera::createPixels() {
 		}
 	}
 }
+
 //Render
 //Lanch a ray from each pixle radiance lec 4 &5
 void Camera::render(Scene* s) {
 	std::cout << "Render: " << std::endl;
 	for (int j = 0; j < SIZE; j++) { //vertical
 		for (int i = 0; i < SIZE; i++) { //horizontell
-			//create a ray
+			
 			glm::vec3 color(0,0,0);
-
+			//create a ray
 			Ray *ray = new Ray(eye, glm::vec4(0, i*delta - 0.99875, j*delta - 0.99875, 1), ColorDbl(0, 0, 0));
 
 			//finde intersection point
@@ -40,7 +40,6 @@ void Camera::render(Scene* s) {
 			//add ray to pixel;
 			pixels[i][j]->addRay(ray);
 		}
-		std::cout << "Row: " << j << std::endl;
 	}
 };
 //get normal depending on type
