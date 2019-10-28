@@ -22,8 +22,10 @@ public:
 
 	void CreateLightSource();
 	void createTetrahedron();
-
+	glm::vec4 light;
 	void intersection(Ray* arg);
+
+	void shadowRay(Ray * ray);
 
 };
 

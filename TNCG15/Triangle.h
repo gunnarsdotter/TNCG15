@@ -17,7 +17,7 @@ public:
 	};
 
 	//Computes the intersection point with Möller-Trumbore algorithm
-	bool rayIntersection(Ray* arg, glm::vec3*intPoint);
+	bool rayIntersection(Ray* arg, glm::vec3*intPoint, double* it);
 
 	int getSurfaceType() { return surfaceType; };
 	glm::vec3 getNormal() { return normal; };

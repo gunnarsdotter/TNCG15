@@ -10,7 +10,7 @@ public:
 		radius{ r }, center{ c }, color{ col }, surfaceType{ t }{};
 	virtual ~Sphere();
 
-	bool rayIntersection(Ray* arg, glm::vec3* x);
+	bool rayIntersection(Ray * arg, glm::vec3 * x, double * t);
 	
 	ColorDbl getColor() { return color; };
 	int getSurfaceType() { return surfaceType; };

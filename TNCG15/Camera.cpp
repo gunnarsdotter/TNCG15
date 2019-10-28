@@ -33,33 +33,28 @@ void Camera::render(Scene* s) {
 			//create a ray
 			Ray *ray = new Ray(eye, glm::vec4(0, i*delta - 0.99875, j*delta - 0.99875, 1), ColorDbl(0, 0, 0));
 
-			//finde intersection point
-			color = castRay(ray, s);
-			ray->color = ColorDbl(color.x, color.y, color.z);
+			//Cast a ray
+			//castRay(ray, s);
+			castRay(ray, s, 1);
+			//ray->color = ColorDbl(color.x, color.y, color.z);
 			//s->intersection(ray);
 			//add ray to pixel;
 			pixels[i][j]->addRay(ray);
 		}
 	}
 };
+
 //get normal depending on type
 void getNormal(Ray* ray, glm::vec3 &normal, int &sType) {
 	if (ray->T) {
 		normal = ray->T->getNormal();
 		sType = ray->T->getSurfaceType();
-
-		if (sType == 0) {
-			return;
-		}
-
 	}
 	else if (ray->S) {
 		normal = ray->S->calcNormal(ray->intersectionpoint);
 		sType = ray->S->getSurfaceType();
 	}
-	else {
-		return;
-	}
+
 }
 
 //create local coordinate system
@@ -71,6 +66,7 @@ void createCoordinateSystem(const glm::vec3& N,	glm::vec3& Nt, glm::vec3& Nb)
 		Nt = glm::vec3(0, -N.z, N.y) / sqrtf(N.y * N.y + N.z * N.z);
 	Nb = glm::cross(N,Nt);
 }
+
 glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
 {
 	// cos(theta) = u1 = y
@@ -81,8 +77,50 @@ glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
 	float z = sinTheta * sinf(phi);
 	return glm::vec3(x, r1, z);
 }
-glm::vec3 Camera::castRay(Ray* ray, Scene *s) {
 
+void Camera::castRay(Ray* ray, Scene *s, int bounce) {
+	if (bounce > 3)return;
+		int sType = 0;
+
+		glm::vec3 normal;
+		glm::vec3 iDirection = ray->getDirection();
+		glm::vec3 rDirection;
+
+		//get intersectionpoint
+		s->intersection(ray);
+
+		//send a shadow Ray
+		s->shadowRay(ray);
+
+		//get normal depending on objectType
+		getNormal(ray, normal, sType);
+
+		//choose the reflectans by the surfucetype.
+		//calc light depending on surfacetype
+		
+		switch (sType) {
+		case 1: { // Lambertian
+
+			break;
+		}
+		case 3: { // Specular
+			//Create a new ray 
+			rDirection = iDirection - 2.0f*glm::dot(iDirection,normal)*normal;
+			Ray *rRay = new Ray(glm::vec4(ray->intersectionpoint, 1), glm::vec4((ray->intersectionpoint + rDirection),1), ray->color);
+			//Cast the ray untill x bounces
+			castRay(rRay, s, bounce + 1);
+			//if x bounces retrun color = color first.
+			ray->color = rRay->color;
+
+		}
+		default: break;
+		}
+
+
+		//cast new ray med den reflecterande. 
+		//???
+//???
+		/*
 	const float EPSILON = 0.00001f;
 	const int MAX_DEPTH = 1;
 
@@ -101,11 +139,8 @@ glm::vec3 Camera::castRay(Ray* ray, Scene *s) {
 	glm::vec3 iDirection = ray->getDirection();
 	glm::vec4 rDirection;
 
-	//get intersectionpoint
-	s->intersection(ray);
-
 	//get normal depending on objectType
-	getNormal(ray,normal,sType);
+	getNormal(ray, normal, sType);
 
 	//calc light depending on surfacetype
 	switch(sType){
@@ -124,7 +159,7 @@ glm::vec3 Camera::castRay(Ray* ray, Scene *s) {
 			
 			Ray *rRay= new Ray(glm::vec4(ray->intersectionpoint, 1), rDirection, ColorDbl(0,0,0));
 			
-		//	color += castRay(rRay,s);
+			//color += castRay(rRay,s);
 
 
 		}
@@ -132,7 +167,8 @@ glm::vec3 Camera::castRay(Ray* ray, Scene *s) {
 
 		break;
 	}
-	case 2: { // Specular
+	case 3: { // Specular
+
 		rDirection = glm::vec4(iDirection-normal*glm::dot(normal,iDirection),4);
 		Ray *rRay= new Ray(glm::vec4(ray->intersectionpoint,1),rDirection,ray->color);
 		//color += castRay(rRay, s);
@@ -141,7 +177,7 @@ glm::vec3 Camera::castRay(Ray* ray, Scene *s) {
 	default: break;
 	}
 	return ray->color.getColor();
-
+	*/
 }
 
 

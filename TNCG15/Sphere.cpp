@@ -4,7 +4,7 @@ Sphere::~Sphere()
 {
 }
 
-bool Sphere::rayIntersection(Ray* arg, glm::vec3* x) {
+bool Sphere::rayIntersection(Ray* arg, glm::vec3* x, double* t) {
 	glm::vec3 rayDirection = glm::normalize(arg->direction);
 	glm::vec3 L = glm::vec3(center - arg->start);
 
@@ -36,11 +36,9 @@ bool Sphere::rayIntersection(Ray* arg, glm::vec3* x) {
 		if (t0 < 0)
 			return  false; // both t0 and t1 are negative
 	}
-	//check if the previus intersectionpoint is infront of the sphere.
-	if (arg->intersectionpoint.x > 0.5 && arg->intersectionpoint.x < t0)return false;
-	//t = t0;
+	*t = t0;
 	//add the intersection point to x t0 is importent
-	x->x = t0;//arg->start.x + glm::vec4(rayDirection * t0, 1.0f).x;
+	x->x = arg->start.x + glm::vec4(rayDirection * t0, 1.0f).x;
 	x->y = arg->start.y + glm::vec4(rayDirection * t0, 1.0f).y;
 	x->z = arg->start.z + glm::vec4(rayDirection * t0, 1.0f).z;
 	

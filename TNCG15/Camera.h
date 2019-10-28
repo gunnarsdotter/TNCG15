@@ -46,7 +46,7 @@ public:
 	 
 	void switchEye();	
 	void render(Scene * s);
-	glm::vec3 castRay(Ray* arg, Scene* s);
+	void castRay(Ray* arg, Scene* s, int bounce);
 	void toImg();
 
 };
