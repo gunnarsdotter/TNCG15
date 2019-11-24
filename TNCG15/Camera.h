@@ -1,6 +1,5 @@
 ﻿#pragma warning (disable : 4996)
 #include "glm.hpp"
-#include "Pixel.h"
 #include "Ray.h"
 #include "Scene.h"
 #include <iostream>
@@ -14,7 +13,7 @@ class Camera
 private:
 	glm::vec4 v1, v2, v3, v4;
 	//eye position variable
-	glm::vec4 eye1 = glm::vec4(-2, 0, 0, 1); 
+	glm::vec4 eye1 = glm::vec4(-2, 0, 0, 1);
 	glm::vec4 eye2 = glm::vec4(-1, 0, 0, 1);
 	bool pos1;
 	//Camera variable
@@ -22,7 +21,7 @@ private:
 	double cameralength = 0.99875;
 	glm::vec4 eye = eye1;
 	// Pixel 2D array 800x800 
-	Pixel* pixels[SIZE][SIZE];
+	glm::vec3 pixels[SIZE][SIZE];
 	void getEye();
 	void createPixels();
 	double findImax();
@@ -36,18 +35,12 @@ public:
 		createPixels();
 	};
 
-	 ~Camera() {
-		 for (int j = 0; j < SIZE; j++) { //vertical
-			 for (int i = 0; i < SIZE; i++) { //horizontell
-				 delete pixels[i][j];
-			 }
-		 }
+	~Camera() {
 	}
-	 
-	void switchEye();	
-	void render(Scene * s);
-	void castRay(Ray* arg, Scene* s, int bounce);
-	void toImg();
 
+	void switchEye();
+	void render(Scene* s);
+	glm::vec3 castRay(Ray* arg, Scene* s, int bounce);
+	void toImg();
 };
 

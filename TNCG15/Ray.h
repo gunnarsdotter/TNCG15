@@ -1,6 +1,5 @@
 #pragma once
-
-#include "ColorDbl.h"
+#include "glm.hpp"
 class Triangle;
 class Sphere;
 
@@ -8,27 +7,27 @@ class Sphere;
 class Ray
 {
 public:
-	Ray(glm::vec4 start, glm::vec4 end, ColorDbl color):
-		start{ start }, end{ end }, color{ color } 
+	Ray(glm::vec3 start, glm::vec3 end, glm::vec3 col) :
+		start{ start }, end{ end }
 	{
-		direction = end- start;
+		direction = end - start;
 		T = nullptr;
 		S = nullptr;
+		color = col;
 		intersectionpoint = glm::vec3(NULL, NULL, NULL);
 		t = NULL;
 	};
 	virtual ~Ray() = default;
 	glm::vec3 getDirection() const;
-	void setTriangle(Triangle* in, glm::vec3 inPoint, ColorDbl c, double t);
-	void setSphere(Sphere* in, glm::vec3 inPoint, ColorDbl c, double t);
+	void setTriangle(Triangle* in, glm::vec3 inPoint, glm::vec3 col, double t);
+	void setSphere(Sphere* in, glm::vec3 inPoint, glm::vec3 col, double t);
 
 
-	glm::vec4 start, end;
-	ColorDbl color;
-	glm::vec3 direction;
-	Triangle *T;
+	glm::vec3 start, end;
+	glm::vec3 direction, color;
+	Triangle* T;
 	Sphere* S;
-	double t; 
+	double t;
 	glm::vec3 intersectionpoint;
 };
 

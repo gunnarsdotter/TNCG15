@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <random>
+#include "gtx/rotate_vector.hpp"
 # define M_PI           3.14159265358979323846  /* pi */
 
 //switch eye func
@@ -17,54 +18,17 @@ void Camera::createPixels() {
 	//skapa pixel 
 	for (int j = 0; j < SIZE; j++) { //vertical
 		for (int i = 0; i < SIZE; i++) { //horizontell
-			pixels[i][j] = new Pixel(ColorDbl(0, 0, 0), nullptr);
+			pixels[i][j] = glm::vec3(0, 0, 0);
 		}
 	}
 }
-
-//Render
-//Lanch a ray from each pixle radiance lec 4 &5
-void Camera::render(Scene* s) {
-	std::cout << "Render: " << std::endl;
-	for (int j = 0; j < SIZE; j++) { //vertical
-		for (int i = 0; i < SIZE; i++) { //horizontell
-			
-			glm::vec3 color(0,0,0);
-			//create a ray
-			Ray *ray = new Ray(eye, glm::vec4(0, i*delta - 0.99875, j*delta - 0.99875, 1), ColorDbl(0, 0, 0));
-
-			//Cast a ray
-			//castRay(ray, s);
-			castRay(ray, s, 1);
-			//ray->color = ColorDbl(color.x, color.y, color.z);
-			//s->intersection(ray);
-			//add ray to pixel;
-			pixels[i][j]->addRay(ray);
-		}
-	}
-};
-
-//get normal depending on type
-void getNormal(Ray* ray, glm::vec3 &normal, int &sType) {
-	if (ray->T) {
-		normal = ray->T->getNormal();
-		sType = ray->T->getSurfaceType();
-	}
-	else if (ray->S) {
-		normal = ray->S->calcNormal(ray->intersectionpoint);
-		sType = ray->S->getSurfaceType();
-	}
-
-}
-
-//create local coordinate system
-void createCoordinateSystem(const glm::vec3& N,	glm::vec3& Nt, glm::vec3& Nb)
+void createCoordinateSystem(const glm::vec3& N, glm::vec3& Nt, glm::vec3& Nb)
 {
 	if (std::fabs(N.x) > std::fabs(N.y))
 		Nt = glm::vec3(N.z, 0, -N.x) / sqrtf(N.x * N.x + N.z * N.z);
 	else
 		Nt = glm::vec3(0, -N.z, N.y) / sqrtf(N.y * N.y + N.z * N.z);
-	Nb = glm::cross(N,Nt);
+	Nb = glm::cross(N, Nt);
 }
 
 glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
@@ -77,109 +41,134 @@ glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
 	float z = sinTheta * sinf(phi);
 	return glm::vec3(x, r1, z);
 }
+//Render
+//Lanch a ray from each pixle radiance lec 4 &5
+void Camera::render(Scene* s) {
+	glm::vec3 rcolor(0, 0, 0);
+	int numSamples = 1; // samples per pixel
+	std::cout << "Render: " << std::endl;
 
-void Camera::castRay(Ray* ray, Scene *s, int bounce) {
-	if (bounce > 3)return;
-		int sType = 0;
+	for (int j = 0; j < SIZE; j++) { //vertical
+		for (int i = 0; i < SIZE; i++) { //horizontell
 
-		glm::vec3 normal;
-		glm::vec3 iDirection = ray->getDirection();
-		glm::vec3 rDirection;
+			glm::vec3 color(0, 0, 0);
 
-		//get intersectionpoint
-		s->intersection(ray);
+			for (int k = 0; k < numSamples; k++) {
+				//create a ray
+				Ray* ray = new Ray(eye, glm::vec4(0, i * delta - 0.99875, j * delta - 0.99875, 1), rcolor);
+				color += castRay(ray, s, 1);
+				delete ray;
 
-		//send a shadow Ray
-		s->shadowRay(ray);
+			}
+			color = color / (float)pow(numSamples, 2);
+			//Cast a ray
+			//castRay(ray, s);
+			//ray->color = ColorDbl(color.x, color.y, color.z);
+			//s->intersection(ray);
+			//add ray to pixel;
 
-		//get normal depending on objectType
-		getNormal(ray, normal, sType);
-
-		//choose the reflectans by the surfucetype.
-		//calc light depending on surfacetype
-		
-		switch (sType) {
-		case 1: { // Lambertian
-
-			break;
+			pixels[i][j] = color;
 		}
-		case 3: { // Specular
-			//Create a new ray 
-			rDirection = iDirection - 2.0f*glm::dot(iDirection,normal)*normal;
-			Ray *rRay = new Ray(glm::vec4(ray->intersectionpoint, 1), glm::vec4((ray->intersectionpoint + rDirection),1), ray->color);
-			//Cast the ray untill x bounces
-			castRay(rRay, s, bounce + 1);
-			//if x bounces retrun color = color first.
-			ray->color = rRay->color;
+		std::cout << j << std::endl;
+	}
+};
 
-		}
-		default: break;
-		}
+//get normal depending on type
+void getNormal(Ray* ray, glm::vec3& normal, int& sType) {
+	if (ray->T) {
+		normal = ray->T->getNormal();
+		sType = ray->T->getSurfaceType();
+	}
+	else if (ray->S) {
+		normal = ray->S->calcNormal(ray->intersectionpoint);
+		sType = ray->S->getSurfaceType();
+	}
 
+}
+glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
+	if (bounce > 3)return glm::vec3(0, 0, 0);
+	int sType = 0;
 
-		//cast new ray med den reflecterande. 
-		//???
-//???
-		/*
-	const float EPSILON = 0.00001f;
-	const int MAX_DEPTH = 1;
-
-	//random gen
-	std::default_random_engine generator;
-	std::uniform_real_distribution<> distribution(0.0, 1.0);
-	std::uniform_real_distribution<> disPi(0.0, M_PI);
-
-	float r1,r2;
-	float pdf = 1 / (2 * M_PI);
-
-	int sType=0;
-	int numSamples = 1;
-
-	glm::vec3 normal, Nt, Nb, color(0,0,0);
+	glm::vec3 normal;
 	glm::vec3 iDirection = ray->getDirection();
-	glm::vec4 rDirection;
+	glm::vec3 rDirection;
+
+	//get intersectionpoint
+	s->intersection(ray);
 
 	//get normal depending on objectType
 	getNormal(ray, normal, sType);
 
+	//choose the reflectans by the surfucetype.
 	//calc light depending on surfacetype
-	switch(sType){
+	switch (sType) {
 	case 1: { // Lambertian
 
+		std::random_device gen;
+		std::uniform_real_distribution<> distribution(0, 1);//uniform distribution between 0 and 1
+
+		glm::vec3 indirectlight = glm::vec3(0.0, 0.0, 0.0);
+		glm::vec3 directlight = glm::vec3(0.0, 0.0, 0.0);
+
+		/// INDIRECT LIGHt not working
+
+		glm::vec3 Nt, Nb;
 		createCoordinateSystem(normal, Nt, Nb);
+		float pdf = 1 / (2 * M_PI);
 
-		for (int i = 0; i < numSamples; i++) {
-			r1 = distribution(generator);
-			r2 = distribution(generator);
-			glm::vec3 sample = uniformSampleHemisphere(r1, r2);
-			rDirection = glm::vec4(
-				sample.x * Nb.x + sample.y * normal.x + sample.z * Nt.x,
-				sample.x * Nb.y + sample.y * normal.y + sample.z * Nt.y,
-				sample.x * Nb.z + sample.y * normal.z + sample.z * Nt.z,1);
-			
-			Ray *rRay= new Ray(glm::vec4(ray->intersectionpoint, 1), rDirection, ColorDbl(0,0,0));
-			
-			//color += castRay(rRay,s);
+		double r1 = distribution(gen);
+		double r2 = distribution(gen);
+
+		glm::vec3 sample = uniformSampleHemisphere(r1, r2);
+		glm::vec3 sampleWorld(
+			sample.x * Nb.x + sample.y * normal.x + sample.z * Nt.x,
+			sample.x * Nb.y + sample.y * normal.y + sample.z * Nt.y,
+			sample.x * Nb.z + sample.y * normal.z + sample.z * Nt.z);
+		// don't forget to divide by PDF and multiply by cos(theta)
+		Ray* out = new Ray(ray->intersectionpoint + sampleWorld, sampleWorld, ray->color);
+
+		indirectlight += (float)r1 * castRay(out, s, bounce + 1) / pdf;
+
+		delete out;
+		/// DIRECT LIGHt
+		glm::vec3 lightDirection = s->getPointOnLightSource() - ray->intersectionpoint;
+		float ldist = glm::length(lightDirection);
+		//float ldist = sqrt(lightDirection.x*lightDirection.x+ lightDirection.y * lightDirection.y+ lightDirection.z * lightDirection.z);
+		//lightDirection.x /= ldist, lightDirection.y /= ldist, lightDirection.z /= ldist;
+		//glm::vec3 intensity = glm::vec3(1.0, 1.0, 1.0) / (ldist);
+		glm::vec3 intensity = glm::vec3(1.0, 1.0, 1.0) / (ldist*ldist);
 
 
-		}
-		//color = color / (float)numSamples;
+		s->shadowRay(ray);
+
+		directlight = ray->color * intensity * std::max(0.0f, glm::dot(lightDirection, normal));
+
+		//return (directlight + indirectlight) / (float)M_PI;
+		return (directlight) / (float)M_PI;
 
 		break;
 	}
+	case 2: { // lightsource
+		return glm::vec3(1.0, 1.0, 1.0);
+		break;
+	}
 	case 3: { // Specular
-
-		rDirection = glm::vec4(iDirection-normal*glm::dot(normal,iDirection),4);
-		Ray *rRay= new Ray(glm::vec4(ray->intersectionpoint,1),rDirection,ray->color);
-		//color += castRay(rRay, s);
-
+		//send a shadow Ray
+		s->shadowRay(ray);
+		//Create a new ray 
+		rDirection = iDirection - 2.0f * glm::dot(iDirection, normal) * normal;
+		Ray* rRay = new Ray(glm::vec4(ray->intersectionpoint, 1), glm::vec4((ray->intersectionpoint + rDirection), 1), ray->color);
+		//Cast the ray untill x bounces
+		return castRay(rRay, s, bounce + 1);
+		break;
+		//if x bounces retrun color = color first.
 	}
 	default: break;
 	}
-	return ray->color.getColor();
-	*/
-}
 
+	return glm::vec3(0, 0, 0);
+
+}
 
 void Camera::toImg() {
 	double imax = findImax();
@@ -190,14 +179,14 @@ void Camera::toImg() {
 		for (int j = 0; j < SIZE; j++) { //vertical
 			for (int i = 0; i < SIZE; i++) { //horizontell
 				//get the color
-				ColorDbl col = (*pixels[SIZE - i - 1][SIZE - 1 - j]).getColor();
+				glm::vec3 col = (pixels[SIZE - i - 1][SIZE - 1 - j]);
 				//the scene is well-lit everywhere 
 				fprintf(image, "%d %d %d ",
-					(int)(col.color.r * 255.99/imax),
-					(int)(col.color.g * 255.99/imax),
-					(int)(col.color.b * 255.99/imax)
-				); 
-				
+					(int)(col.r * 255.99 / imax),
+					(int)(col.g * 255.99 / imax),
+					(int)(col.b * 255.99 / imax)
+				);
+
 				/* To get more dynamic when we have bright spots in the scene
 				#include <math.h>
 					fprintf(image, "%d %d %d ",
@@ -217,15 +206,15 @@ double Camera::findImax() {
 	for (int j = 0; j < SIZE; j++) { //vertical
 		for (int i = 0; i < SIZE; i++) { //horizontell
 			//get the color
-			ColorDbl col = (*pixels[SIZE - i - 1][SIZE - 1 - j]).getColor();
-			if (col.color.r > imax) {
-				imax = col.color.r;
+			glm::vec3 col = (pixels[SIZE - i - 1][SIZE - 1 - j]);
+			if (col.r > imax) {
+				imax = col.r;
 			}
-			if (col.color.g > imax) {
-				imax = col.color.g;
+			if (col.g > imax) {
+				imax = col.g;
 			}
-			if (col.color.b > imax) {
-				imax = col.color.b;
+			if (col.b > imax) {
+				imax = col.b;
 			}
 		}
 	}

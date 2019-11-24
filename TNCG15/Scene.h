@@ -11,10 +11,15 @@ using namespace std;
 class Scene
 {
 private:
+	void createSquareRoom();
 	void createRoom();
 
 	std::vector<Triangle*> triangles;
+	std::vector<Triangle*> lights;
+
 	std::vector<Sphere> spheres;
+
+	glm::vec3 light;
 
 public:
 	Scene();
@@ -22,10 +27,9 @@ public:
 
 	void CreateLightSource();
 	void createTetrahedron();
-	glm::vec4 light;
 	void intersection(Ray* arg);
+	glm::vec3 getPointOnLightSource();
 
-	void shadowRay(Ray * ray);
-
+	void shadowRay(Ray* ray);
 };
 

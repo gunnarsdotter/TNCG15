@@ -41,6 +41,6 @@ bool Sphere::rayIntersection(Ray* arg, glm::vec3* x, double* t) {
 	x->x = arg->start.x + glm::vec4(rayDirection * t0, 1.0f).x;
 	x->y = arg->start.y + glm::vec4(rayDirection * t0, 1.0f).y;
 	x->z = arg->start.z + glm::vec4(rayDirection * t0, 1.0f).z;
-	
+
 	return true;
 }

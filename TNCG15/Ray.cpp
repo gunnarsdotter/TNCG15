@@ -1,19 +1,19 @@
 #include "Ray.h"
 
-void Ray::setTriangle(Triangle* in, glm::vec3 inPoint, ColorDbl c, double tc) {
+void Ray::setTriangle(Triangle* in, glm::vec3 inPoint, glm::vec3 col, double tc) {
 	T = in;
 	intersectionpoint = inPoint;
-	color = c;
 	t = tc;
-	
+	color = col;
+
 	//c.display();
 }
 
-void Ray::setSphere(Sphere* in, glm::vec3 inPoint, ColorDbl c, double tc) {
+void Ray::setSphere(Sphere* in, glm::vec3 inPoint, glm::vec3 col, double tc) {
 	S = in;
 	intersectionpoint = inPoint;
-	color = c;
 	t = tc;
+	color = col;
 };
 
 
