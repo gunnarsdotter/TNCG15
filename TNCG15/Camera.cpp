@@ -45,7 +45,7 @@ glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
 //Lanch a ray from each pixle radiance lec 4 &5
 void Camera::render(Scene* s) {
 	glm::vec3 rcolor(0, 0, 0);
-	int numSamples = 1; // samples per pixel
+	int numSamples = 2; // samples per pixel
 	std::cout << "Render: " << std::endl;
 
 	for (int j = 0; j < SIZE; j++) { //vertical
@@ -133,18 +133,18 @@ glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 		/// DIRECT LIGHt
 		glm::vec3 lightDirection = s->getPointOnLightSource() - ray->intersectionpoint;
 		float ldist = glm::length(lightDirection);
+		lightDirection /= ldist;
+		ldist = ldist * ldist;
 		//float ldist = sqrt(lightDirection.x*lightDirection.x+ lightDirection.y * lightDirection.y+ lightDirection.z * lightDirection.z);
 		//lightDirection.x /= ldist, lightDirection.y /= ldist, lightDirection.z /= ldist;
-		//glm::vec3 intensity = glm::vec3(1.0, 1.0, 1.0) / (ldist);
-		glm::vec3 intensity = glm::vec3(1.0, 1.0, 1.0) / (ldist*ldist);
-
+		float NdotL = std::max(0.0f, glm::dot(lightDirection, normal));
+		glm::vec3 intensity = glm::vec3(1.0, 1.0, 1.0)*NdotL;
 
 		s->shadowRay(ray);
 
-		directlight = ray->color * intensity * std::max(0.0f, glm::dot(lightDirection, normal));
+		directlight = ray->color * intensity / ldist;
 
-		//return (directlight + indirectlight) / (float)M_PI;
-		return (directlight) / (float)M_PI;
+		return (directlight + indirectlight) / (float)M_PI;
 
 		break;
 	}
