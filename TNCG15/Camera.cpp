@@ -128,6 +128,7 @@ glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 		Ray* out = new Ray(ray->intersectionpoint + sampleWorld, sampleWorld, ray->color);
 
 		indirectlight += (float)r1 * castRay(out, s, bounce + 1) / pdf;
+		 
 
 		delete out;
 		/// DIRECT LIGHt
