@@ -1,4 +1,3 @@
-#include <GLFW/glfw3.h>
 #include "Scene.h"
 #include "Camera.h"
 #include <iostream>

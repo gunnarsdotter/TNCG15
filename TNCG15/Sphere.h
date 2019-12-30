@@ -12,6 +12,8 @@ public:
 	bool rayIntersection(Ray* arg, glm::vec3* x, double* t);
 
 	int getSurfaceType() { return surfaceType; };
+	glm::vec3 getColor() { return color; };
+
 
 	glm::vec3 calcNormal(glm::vec3 Phit)
 	{

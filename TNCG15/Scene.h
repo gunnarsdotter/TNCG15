@@ -17,12 +17,13 @@ private:
 	std::vector<Triangle*> triangles;
 	std::vector<Triangle*> lights;
 
-	std::vector<Sphere> spheres;
+	std::vector<Sphere*> spheres;
 
 	glm::vec3 light;
 
 public:
 	Scene();
+	void createSphereRoom();
 	virtual ~Scene();
 
 	void CreateLightSource();

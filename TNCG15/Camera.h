@@ -40,6 +40,8 @@ public:
 
 	void switchEye();
 	void render(Scene* s);
+	glm::vec3 indirectLight(Ray * ray, Scene * s, glm::vec3 normal, int bounce);
+	glm::vec3 directLight(Ray * ray, Scene * s, glm::vec3 normal);
 	glm::vec3 castRay(Ray* arg, Scene* s, int bounce);
 	void toImg();
 };

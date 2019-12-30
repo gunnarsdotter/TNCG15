@@ -1,6 +1,8 @@
 #include "Camera.h"
 #include <random>
 #include "gtx/rotate_vector.hpp"
+#include "gtx\vector_angle.hpp"
+#include "gtx\fast_trigonometry.hpp"
 # define M_PI           3.14159265358979323846  /* pi */
 
 //switch eye func
@@ -45,7 +47,7 @@ glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
 //Lanch a ray from each pixle radiance lec 4 &5
 void Camera::render(Scene* s) {
 	glm::vec3 rcolor(0, 0, 0);
-	int numSamples = 2; // samples per pixel
+	int numSamples = 16; // samples per pixel
 	std::cout << "Render: " << std::endl;
 
 	for (int j = 0; j < SIZE; j++) { //vertical
@@ -60,7 +62,7 @@ void Camera::render(Scene* s) {
 				delete ray;
 
 			}
-			color = color / (float)pow(numSamples, 2);
+			color = color / (float)pow(numSamples, 1);
 			//Cast a ray
 			//castRay(ray, s);
 			//ray->color = ColorDbl(color.x, color.y, color.z);
@@ -83,8 +85,80 @@ void getNormal(Ray* ray, glm::vec3& normal, int& sType) {
 		normal = ray->S->calcNormal(ray->intersectionpoint);
 		sType = ray->S->getSurfaceType();
 	}
-
 }
+std::random_device gen;
+std::uniform_real_distribution<> distribution(0, 1);//uniform distribution between 0 and 1
+
+glm::vec3 Camera::indirectLight(Ray *ray, Scene *s, glm::vec3 normal, int bounce) {
+
+	glm::vec3 indirectlight = glm::vec3(0.0, 0.0, 0.0);
+
+	/// INDIRECT LIGHt not working
+	/*
+	glm::vec3 Nt, Nb;
+	createCoordinateSystem(normal, Nt, Nb);
+	float pdf = 1 / (2 * M_PI);
+
+	double r1 = distribution(gen);
+	double r2 = distribution(gen);
+
+	glm::vec3 sample = uniformSampleHemisphere(r1, r2);
+	glm::vec3 sampleWorld(
+		sample.x * Nb.x + sample.y * normal.x + sample.z * Nt.x,
+		sample.x * Nb.y + sample.y * normal.y + sample.z * Nt.y,
+		sample.x * Nb.z + sample.y * normal.z + sample.z * Nt.z);
+	// don't forget to divide by PDF and multiply by cos(theta)
+	Ray* out = new Ray(ray->intersectionpoint + sampleWorld, sampleWorld, ray->color);
+
+	indirectlight += (float)r1 * castRay(out, s, bounce + 1) / pdf;
+
+	delete out;
+	*/
+	std::uniform_real_distribution<> angle(0, M_PI);//uniform distribution between 0 and 1
+
+
+	double ioffset = glm::orientedAngle(glm::normalize(glm::vec2(normal.x, normal.z)),
+		glm::normalize(glm::vec2(0.0, 1.0)));
+	double aoffset = glm::orientedAngle(glm::normalize(glm::vec2(normal.x, normal.y)),
+		glm::normalize(glm::vec2(0.0, 1.0)));
+	
+	double r1 = distribution(gen);
+	double r2 = distribution(gen);
+	double inc = acos(sqrt(r1));
+	double azi = 2.0f*M_PI*r2;
+
+	glm::vec3 rDirection = glm::vec3(glm::fastCos(azi + aoffset),
+		glm::fastSin(azi + aoffset),
+		glm::fastCos(inc + ioffset));
+	
+	Ray* out = new Ray(ray->intersectionpoint, ray->intersectionpoint + rDirection, glm::vec3(0.0,0.0,0.0));
+
+	indirectlight += (float)r1 * castRay(out, s, bounce + 1);
+
+	delete out;
+
+	return indirectlight;
+}
+glm::vec3 Camera::directLight(Ray *ray, Scene *s, glm::vec3 normal) {
+	glm::vec3 directlight = glm::vec3(0.0, 0.0, 0.0);
+
+	/// DIRECT LIGHt
+	glm::vec3 lightDirection = s->getPointOnLightSource() - ray->intersectionpoint;
+	float ldist = glm::length(lightDirection);
+	lightDirection /= ldist;
+	ldist = sqrt(ldist);
+	//float ldist = sqrt(lightDirection.x*lightDirection.x+ lightDirection.y * lightDirection.y+ lightDirection.z * lightDirection.z);
+	//lightDirection.x /= ldist, lightDirection.y /= ldist, lightDirection.z /= ldist;
+	float NdotL = std::max(0.0f, glm::dot(lightDirection, normal));
+	glm::vec3 intensity = glm::vec3(1.0, 1.0, 1.0)*NdotL;
+
+	s->shadowRay(ray);
+
+	directlight = ray->color * intensity / ldist;
+	return directlight;
+}
+
+
 glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 	if (bounce > 3)return glm::vec3(0, 0, 0);
 	int sType = 0;
@@ -103,49 +177,14 @@ glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 	//calc light depending on surfacetype
 	switch (sType) {
 	case 1: { // Lambertian
+		glm::vec3 light = glm::vec3(0.0, 0.0, 0.0);
 
-		std::random_device gen;
-		std::uniform_real_distribution<> distribution(0, 1);//uniform distribution between 0 and 1
+		light += indirectLight(ray, s, normal, bounce);
+		light += directLight(ray, s, normal);
 
-		glm::vec3 indirectlight = glm::vec3(0.0, 0.0, 0.0);
-		glm::vec3 directlight = glm::vec3(0.0, 0.0, 0.0);
-
-		/// INDIRECT LIGHt not working
-
-		glm::vec3 Nt, Nb;
-		createCoordinateSystem(normal, Nt, Nb);
-		float pdf = 1 / (2 * M_PI);
-
-		double r1 = distribution(gen);
-		double r2 = distribution(gen);
-
-		glm::vec3 sample = uniformSampleHemisphere(r1, r2);
-		glm::vec3 sampleWorld(
-			sample.x * Nb.x + sample.y * normal.x + sample.z * Nt.x,
-			sample.x * Nb.y + sample.y * normal.y + sample.z * Nt.y,
-			sample.x * Nb.z + sample.y * normal.z + sample.z * Nt.z);
-		// don't forget to divide by PDF and multiply by cos(theta)
-		Ray* out = new Ray(ray->intersectionpoint + sampleWorld, sampleWorld, ray->color);
-
-		indirectlight += (float)r1 * castRay(out, s, bounce + 1) / pdf;
-		 
-
-		delete out;
-		/// DIRECT LIGHt
-		glm::vec3 lightDirection = s->getPointOnLightSource() - ray->intersectionpoint;
-		float ldist = glm::length(lightDirection);
-		lightDirection /= ldist;
-		ldist = ldist * ldist;
-		//float ldist = sqrt(lightDirection.x*lightDirection.x+ lightDirection.y * lightDirection.y+ lightDirection.z * lightDirection.z);
-		//lightDirection.x /= ldist, lightDirection.y /= ldist, lightDirection.z /= ldist;
-		float NdotL = std::max(0.0f, glm::dot(lightDirection, normal));
-		glm::vec3 intensity = glm::vec3(1.0, 1.0, 1.0)*NdotL;
-
-		s->shadowRay(ray);
-
-		directlight = ray->color * intensity / ldist;
-
-		return (directlight + indirectlight) / (float)M_PI;
+		//std::cout << directlight.r << " " << directlight.g << " " << directlight.b  << std::endl;
+		//return (directlight + indirectlight) / (float)M_PI;
+		return (light) / (float)M_PI;
 
 		break;
 	}
@@ -173,6 +212,7 @@ glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 
 void Camera::toImg() {
 	double imax = findImax();
+	cout << "this is imax " << imax << endl;
 
 	FILE* image = fopen("file.ppm", "wb");
 	fprintf(image, "P3 %d %d 255\n", SIZE, SIZE);

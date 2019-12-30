@@ -5,20 +5,29 @@ Scene::Scene()
 	light = glm::vec3(0, 0, 0);
 	createTetrahedron();
 	//createSphere();
-	createSquareRoom();
-	//createRoom();	
-	Sphere sphere1(1.0, glm::vec4(8, -3.5, -2, 1), glm::vec3(1.0, 0.0, 0.0), 3);
-	spheres.push_back(sphere1);
+	//createSquareRoom();
+	createRoom();	
+	spheres.push_back(new Sphere(2.0, glm::vec4(8, -3.5, -2, 1), glm::vec3(1.0, 1.0, 1.0), 3));
+	//createSphereRoom();
 	CreateLightSource();
 }
+void Scene::createSphereRoom() {
+	spheres.push_back(new Sphere(100000.0, glm::vec4(100010.0,0.0,0.0, 1), glm::vec3(1.0, 1.0, 1.0), 1));
+	spheres.push_back(new Sphere(100000.0, glm::vec4(5.0,100006.0,0.0, 1), glm::vec3(1.0, 0.0, 0.0), 1));
+	spheres.push_back(new Sphere(100000.0, glm::vec4(5.0, -100006.0, 0.0, 1), glm::vec3(0.0, 0.0, 1.0), 1));
 
+	spheres.push_back(new Sphere(100000.0, glm::vec4(5.0, 0.0,-100006.0, 1), glm::vec3(1.0, 1.0, 1.0), 1));
+	spheres.push_back(new Sphere(100000.0, glm::vec4(5.0, 0.0,100006.0, 1), glm::vec3(1.0, 1.0, 1.0), 1));
+
+
+}
 Scene::~Scene()
 {
 }
 
 void Scene::CreateLightSource() {
 
-	light = glm::vec3(8.0, 0.0, 4.0);
+	light = glm::vec3(7.0, 0.0, 4.0);
 	/*
 	glm::vec3 white = glm::vec3(1.0, 1.0, 1.0);
 
@@ -55,6 +64,8 @@ void Scene::intersection(Ray* arg)
 	for (auto it = triangles.begin(); it != triangles.end(); ++it) {
 		if ((*(*it)).rayIntersection(arg, &hitpoint, &t)) {
 			if (t > 1 && (arg->t == NULL || arg->t > t)) {
+				//std::cout <<  arg->t << "    ---------" << endl;
+				//std::cout << t << "    " << arg->t << endl;
 				//set intersection point in the ray.
 				arg->setTriangle(*it, hitpoint, (*it)->getColor(), t);
 				arg->S = nullptr; //to choose the right normal.
@@ -62,11 +73,14 @@ void Scene::intersection(Ray* arg)
 		}
 	}
 	for (auto it = spheres.begin(); it != spheres.end(); ++it) {
-		if ((*it).rayIntersection(arg, &hitpoint, &t)) {
+		if ((*(*it)).rayIntersection(arg, &hitpoint, &t)) {
+			//std::cout << t << "    " << arg->t << endl;
 			//check if the previus intersectionpoint is infront of the sphere.
-			if (arg->t > 0.5 && arg->t > t) {
+			if (t > 0.5 && (arg->t == NULL || arg->t > t)) {
+				//std::cout << t << "    " << arg->t << endl;
+
 				//set intersection point in the ray.
-				arg->setSphere(&(*it), hitpoint, (*it).color, t);
+				arg->setSphere(*it, hitpoint, (*it)->getColor(), t);
 				arg->T = nullptr; //to choose the right normal.
 			}
 		}
@@ -121,9 +135,9 @@ void Scene::shadowRay(Ray* ray) {
 		}
 	}
 	for (auto it = spheres.begin(); it != spheres.end(); ++it) {
-		if ((*it).rayIntersection(&sRay, &hitpoint, &t)) {
+		if ((*(*it)).rayIntersection(&sRay, &hitpoint, &t)) {
 			//check that the object is between the light and intPoint
-			if (t > 0) {
+			if (t > 0.0001 && t < 1) {
 				//set color black, in the shadow d
 				//TODO something else
 				ray->color = sRay.color;

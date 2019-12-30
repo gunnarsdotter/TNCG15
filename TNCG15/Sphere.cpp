@@ -37,7 +37,11 @@ bool Sphere::rayIntersection(Ray* arg, glm::vec3* x, double* t) {
 			return  false; // both t0 and t1 are negative
 	}
 	*t = t0;
-	//add the intersection point to x t0 is importent
+
+	//std::cout << t0 << std::endl; //add the intersection point to x t0 is importent
+//	std::cout << *t << std::endl; //add the intersection point to x t0 is importent
+
+	//std::cout << t << std::endl; //add the intersection point to x t0 is importent
 	x->x = arg->start.x + glm::vec4(rayDirection * t0, 1.0f).x;
 	x->y = arg->start.y + glm::vec4(rayDirection * t0, 1.0f).y;
 	x->z = arg->start.z + glm::vec4(rayDirection * t0, 1.0f).z;
