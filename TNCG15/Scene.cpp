@@ -5,11 +5,11 @@ Scene::Scene()
 	light = glm::vec3(0, 0, 0);
 	createTetrahedron();
 	//createSphere();
-	//createSquareRoom();
-	createRoom();	
+	createSquareRoom();
+	//createRoom();	
 	spheres.push_back(new Sphere(2.0, glm::vec4(8, -3.5, -2, 1), glm::vec3(1.0, 1.0, 1.0), 3));
 	//createSphereRoom();
-	CreateLightSource();
+	CreateLightSource(glm::vec3(7.0, 0.0, 4.0));
 }
 void Scene::createSphereRoom() {
 	spheres.push_back(new Sphere(100000.0, glm::vec4(100010.0,0.0,0.0, 1), glm::vec3(1.0, 1.0, 1.0), 1));
@@ -25,20 +25,20 @@ Scene::~Scene()
 {
 }
 
-void Scene::CreateLightSource() {
+void Scene::CreateLightSource(glm::vec3 in) {
 
-	light = glm::vec3(7.0, 0.0, 4.0);
-	/*
-	glm::vec3 white = glm::vec3(1.0, 1.0, 1.0);
+	if (in != glm::vec3(0.0f, 0.0f, 0.0f)) {
+		glm::vec3 white = glm::vec3(1.0, 1.0, 1.0);
 
-	glm::vec3 a = glm::vec3(6.0, 1.0, 4.9);
-	glm::vec3 b = glm::vec3(8.0, 1.0, 4.9);
-	glm::vec3 c = glm::vec3(6.0, -1.0, 4.9);
-	glm::vec3 d = glm::vec3(8.0, -1.0, 4.9);
+		glm::vec3 a = glm::vec3(6.0, 1.0, 4.9);
+		glm::vec3 b = glm::vec3(8.0, 1.0, 4.9);
+		glm::vec3 c = glm::vec3(6.0, -1.0, 4.9);
+		glm::vec3 d = glm::vec3(8.0, -1.0, 4.9);
 
-	lights.push_back(new Triangle(a, b, c, white, 2));
-	lights.push_back(new Triangle(b, c, d, white, 2));
-	*/
+		lights.push_back(new Triangle(a, b, c, white, 2));
+		lights.push_back(new Triangle(b, c, d, white, 2));
+	}else
+		light = in;
 }
 
 void Scene::createTetrahedron()

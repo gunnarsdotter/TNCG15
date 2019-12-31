@@ -26,7 +26,7 @@ public:
 	void createSphereRoom();
 	virtual ~Scene();
 
-	void CreateLightSource();
+	void CreateLightSource(glm::vec3 in);
 	void createTetrahedron();
 	void intersection(Ray* arg);
 	glm::vec3 getPointOnLightSource();
