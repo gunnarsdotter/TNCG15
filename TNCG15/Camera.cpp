@@ -47,7 +47,7 @@ glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
 //Lanch a ray from each pixle radiance lec 4 &5
 void Camera::render(Scene* s) {
 	glm::vec3 rcolor(0, 0, 0);
-	int numSamples = 16; // samples per pixel
+	int numSamples = 1; // samples per pixel
 	std::cout << "Render: " << std::endl;
 
 	for (int j = 0; j < SIZE; j++) { //vertical

@@ -9,7 +9,7 @@ Scene::Scene()
 	//createRoom();	
 	spheres.push_back(new Sphere(2.0, glm::vec4(8, -3.5, -2, 1), glm::vec3(1.0, 1.0, 1.0), 3));
 	//createSphereRoom();
-	CreateLightSource(glm::vec3(7.0, 0.0, 4.0));
+	CreateLightSource(glm::vec3(7.0, 0.0, 4.9));
 }
 void Scene::createSphereRoom() {
 	spheres.push_back(new Sphere(100000.0, glm::vec4(100010.0,0.0,0.0, 1), glm::vec3(1.0, 1.0, 1.0), 1));
@@ -27,7 +27,7 @@ Scene::~Scene()
 
 void Scene::CreateLightSource(glm::vec3 in) {
 
-	if (in != glm::vec3(0.0f, 0.0f, 0.0f)) {
+	if (in == glm::vec3(0.0f, 0.0f, 0.0f)) {
 		glm::vec3 white = glm::vec3(1.0, 1.0, 1.0);
 
 		glm::vec3 a = glm::vec3(6.0, 1.0, 4.9);
