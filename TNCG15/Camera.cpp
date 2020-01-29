@@ -47,7 +47,7 @@ glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
 //Lanch a ray from each pixle radiance lec 4 &5
 void Camera::render(Scene* s) {
 	glm::vec3 rcolor(0, 0, 0);
-	int numSamples = 1; // samples per pixel
+	int numSamples = 5; // samples per pixel
 	std::cout << "Render: " << std::endl;
 
 	for (int j = 0; j < SIZE; j++) { //vertical
@@ -86,6 +86,7 @@ void getNormal(Ray* ray, glm::vec3& normal, int& sType) {
 		sType = ray->S->getSurfaceType();
 	}
 }
+
 std::random_device gen;
 std::uniform_real_distribution<> distribution(0, 1);//uniform distribution between 0 and 1
 
@@ -93,47 +94,18 @@ glm::vec3 Camera::indirectLight(Ray *ray, Scene *s, glm::vec3 normal, int bounce
 
 	glm::vec3 indirectlight = glm::vec3(0.0, 0.0, 0.0);
 
-	/// INDIRECT LIGHt not working
-	/*
+	float r1 = 2*M_PI*distribution(gen);
+	float r2 = sqrt(distribution(gen));
+
 	glm::vec3 Nt, Nb;
 	createCoordinateSystem(normal, Nt, Nb);
-	float pdf = 1 / (2 * M_PI);
 
-	double r1 = distribution(gen);
-	double r2 = distribution(gen);
+	glm::vec3 d = (Nt * cosf(r1) * r2 + Nb*sinf(r1)*r2 + normal*sqrt(1-r2));
+	d = glm::normalize(d);
 
-	glm::vec3 sample = uniformSampleHemisphere(r1, r2);
-	glm::vec3 sampleWorld(
-		sample.x * Nb.x + sample.y * normal.x + sample.z * Nt.x,
-		sample.x * Nb.y + sample.y * normal.y + sample.z * Nt.y,
-		sample.x * Nb.z + sample.y * normal.z + sample.z * Nt.z);
-	// don't forget to divide by PDF and multiply by cos(theta)
-	Ray* out = new Ray(ray->intersectionpoint + sampleWorld, sampleWorld, ray->color);
+	Ray* out = new Ray(ray->intersectionpoint, ray->intersectionpoint + d, glm::vec3(0.0, 0.0, 0.0));
 
-	indirectlight += (float)r1 * castRay(out, s, bounce + 1) / pdf;
-
-	delete out;
-	*/
-	std::uniform_real_distribution<> angle(0, M_PI);//uniform distribution between 0 and 1
-
-
-	double ioffset = glm::orientedAngle(glm::normalize(glm::vec2(normal.x, normal.z)),
-		glm::normalize(glm::vec2(0.0, 1.0)));
-	double aoffset = glm::orientedAngle(glm::normalize(glm::vec2(normal.x, normal.y)),
-		glm::normalize(glm::vec2(0.0, 1.0)));
-	
-	double r1 = distribution(gen);
-	double r2 = distribution(gen);
-	double inc = acos(sqrt(r1));
-	double azi = 2.0f*M_PI*r2;
-
-	glm::vec3 rDirection = glm::vec3(glm::fastCos(azi + aoffset),
-		glm::fastSin(azi + aoffset),
-		glm::fastCos(inc + ioffset));
-	
-	Ray* out = new Ray(ray->intersectionpoint, ray->intersectionpoint + rDirection, glm::vec3(0.0,0.0,0.0));
-
-	indirectlight += (float)r1 * castRay(out, s, bounce + 1);
+	indirectlight += castRay(out, s, bounce + 1);
 
 	delete out;
 
@@ -180,7 +152,16 @@ glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 		glm::vec3 light = glm::vec3(0.0, 0.0, 0.0);
 
 		light += indirectLight(ray, s, normal, bounce);
-		light += directLight(ray, s, normal);
+
+
+		glm::vec3 dLight = glm::vec3(0.0, 0.0, 0.0);
+		int numSray = 4;
+		for (int i = 0; i < numSray; i++) {
+			dLight += directLight(ray, s, normal);
+		}
+		dLight /= numSray;
+
+		light += dLight;
 
 		//std::cout << directlight.r << " " << directlight.g << " " << directlight.b  << std::endl;
 		//return (directlight + indirectlight) / (float)M_PI;
@@ -194,7 +175,7 @@ glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 	}
 	case 3: { // Specular
 		//send a shadow Ray
-		s->shadowRay(ray);
+		//s->shadowRay(ray);
 		//Create a new ray 
 		rDirection = iDirection - 2.0f * glm::dot(iDirection, normal) * normal;
 		Ray* rRay = new Ray(glm::vec4(ray->intersectionpoint, 1), glm::vec4((ray->intersectionpoint + rDirection), 1), ray->color);
@@ -209,6 +190,7 @@ glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 	return glm::vec3(0, 0, 0);
 
 }
+#include <math.h>
 
 void Camera::toImg() {
 	double imax = findImax();
@@ -223,17 +205,13 @@ void Camera::toImg() {
 				glm::vec3 col = (pixels[SIZE - i - 1][SIZE - 1 - j]);
 				//the scene is well-lit everywhere 
 				fprintf(image, "%d %d %d ",
-					(int)(col.r * 255.99 / imax),
-					(int)(col.g * 255.99 / imax),
-					(int)(col.b * 255.99 / imax)
+					(int)(sqrt(col.r) * 255.99 / imax),
+					(int)(sqrt(col.g) * 255.99 / imax),
+					(int)(sqrt(col.b) * 255.99 / imax)
 				);
 
 				/* To get more dynamic when we have bright spots in the scene
-				#include <math.h>
-					fprintf(image, "%d %d %d ",
-					(int)(sqrt(col.color.r) 255.99/imax),
-					(int)(sqrt(col.color.g) * 255.99/imax),
-					(int)(sqrt(col.color.b) * 255.99/imax)
+					
 
 				*/
 			}

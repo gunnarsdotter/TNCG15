@@ -5,11 +5,11 @@ Scene::Scene()
 	light = glm::vec3(0, 0, 0);
 	createTetrahedron();
 	//createSphere();
-	createSquareRoom();
-	//createRoom();	
-	spheres.push_back(new Sphere(2.0, glm::vec4(8, -3.5, -2, 1), glm::vec3(1.0, 1.0, 1.0), 3));
+	//createSquareRoom();
+	createRoom();	
+	spheres.push_back(new Sphere(1.5, glm::vec4(7, -2.5, -2, 1), glm::vec3(1.0, 1.0, 1.0), 3));
 	//createSphereRoom();
-	CreateLightSource(glm::vec3(7.0, 0.0, 4.9));
+	CreateLightSource(glm::vec3(0, 0, 0));
 }
 void Scene::createSphereRoom() {
 	spheres.push_back(new Sphere(100000.0, glm::vec4(100010.0,0.0,0.0, 1), glm::vec3(1.0, 1.0, 1.0), 1));
@@ -44,10 +44,10 @@ void Scene::CreateLightSource(glm::vec3 in) {
 void Scene::createTetrahedron()
 {
 	//vertices
-	glm::vec4 a = glm::vec4(7.0, 0.0, -2.0, 1);
-	glm::vec4 b = glm::vec4(9.0, 2.0, -2.0, 1);
-	glm::vec4 c = glm::vec4(9.0, -2.0, -2.0, 1);
-	glm::vec4 d = glm::vec4(8.0, 0.0, 0.0, 1);
+	glm::vec4 a = glm::vec4(6.0, 1, -2.0, 1);
+	glm::vec4 b = glm::vec4(7.2, 2.5, -2.0, 1);
+	glm::vec4 c = glm::vec4(8, 0.5, -2.0, 1);
+	glm::vec4 d = glm::vec4(7.0, 1.5, 0.0, 1);
 
 	glm::vec3 lightblue = glm::vec3(0.54, 0.82, 1.0);
 
@@ -122,9 +122,15 @@ void Scene::shadowRay(Ray* ray) {
 	glm::vec3 hitpoint = glm::vec3(0, 0, 0);
 	double t = NULL;
 
+	float minDistT = 100000;
+	float minDistS = 100000;
+	float tmp;
 
 	for (auto it = triangles.begin(); it != triangles.end(); ++it) {
 		if ((*(*it)).rayIntersection(&sRay, &hitpoint, &t)) {
+			tmp = glm::length(ray->intersectionpoint-hitpoint);
+			if (tmp < minDistT)
+				minDistT = tmp;
 			//check that the object is between the light and intPoint
 			if (t > 0.0001 && t < 1) {
 				//set color black, in the shadow
@@ -134,8 +140,12 @@ void Scene::shadowRay(Ray* ray) {
 			}
 		}
 	}
+	if (ray->S == nullptr)
 	for (auto it = spheres.begin(); it != spheres.end(); ++it) {
 		if ((*(*it)).rayIntersection(&sRay, &hitpoint, &t)) {
+			tmp = glm::length(ray->intersectionpoint - hitpoint);
+			if (tmp < minDistS)
+				minDistS = tmp;
 			//check that the object is between the light and intPoint
 			if (t > 0.0001 && t < 1) {
 				//set color black, in the shadow d
@@ -145,17 +155,10 @@ void Scene::shadowRay(Ray* ray) {
 			}
 		}
 	}
-	for (auto it = lights.begin(); it != lights.end(); ++it) {
-		if ((*(*it)).rayIntersection(&sRay, &hitpoint, &t)) {
-			//check that the object is between the light and intPoint
-			if (t > 0.0001 && t < 1) {
-				//set color black, in the shadow
-				//TODO something else
-				ray->color = sRay.color;
-				break;
-			}
-		}
-	}
+
+	ray->color = minDistS > minDistT && minDistS != 100000 ? sRay.color : ray->color;
+
+
 }
 //Temporary for faster rendering
 void Scene::createSquareRoom()
