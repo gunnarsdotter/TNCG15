@@ -33,6 +33,7 @@ void createCoordinateSystem(const glm::vec3& N, glm::vec3& Nt, glm::vec3& Nb)
 	Nb = glm::cross(N, Nt);
 }
 
+// NOT USED
 glm::vec3 uniformSampleHemisphere(const float& r1, const float& r2)
 {
 	// cos(theta) = u1 = y
