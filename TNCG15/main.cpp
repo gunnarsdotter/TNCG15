@@ -9,7 +9,7 @@ int main(void)
 	//Surfaces
 	// 0 nothing 
 	// 1 lambertian
-	// 2 Oye-nayar
+	// 2 Oye-nayar (not implemented)
 	// 3 speculer
 	// 4
 	Scene* thescen = new Scene();

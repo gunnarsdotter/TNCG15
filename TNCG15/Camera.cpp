@@ -156,7 +156,7 @@ glm::vec3 Camera::castRay(Ray* ray, Scene* s, int bounce) {
 
 
 		glm::vec3 dLight = glm::vec3(0.0, 0.0, 0.0);
-		int numSray = 4;
+		int numSray = 1;
 		for (int i = 0; i < numSray; i++) {
 			dLight += directLight(ray, s, normal);
 		}

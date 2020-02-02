@@ -9,7 +9,8 @@ Scene::Scene()
 	createRoom();	
 	spheres.push_back(new Sphere(1.5, glm::vec4(7, -2.5, -2, 1), glm::vec3(1.0, 1.0, 1.0), 3));
 	//createSphereRoom();
-	CreateLightSource(glm::vec3(0, 0, 0));
+	CreateLightSource(glm::vec3(7, 0, 4.9));
+	//CreateLightSource(glm::vec3(0, 0, 0));
 }
 void Scene::createSphereRoom() {
 	spheres.push_back(new Sphere(100000.0, glm::vec4(100010.0,0.0,0.0, 1), glm::vec3(1.0, 1.0, 1.0), 1));
